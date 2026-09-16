@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spiritvale Grind Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <p class="eyebrow">Spiritvale</p>
+        <h1>Grind Tracker</h1>
+        <p class="lede">Track gold per hour on any map. Data stays in this browser.</p>
+      </header>
+
+      <main>
+        <section id="setup-view" class="panel">
+          <h2>New session</h2>
+          <form id="setup-form" autocomplete="off">
+            <div class="field">
+              <label for="map-search">Map</label>
+              <div class="combobox" id="map-combobox">
+                <input
+                  id="map-search"
+                  type="text"
+                  placeholder="Search maps…"
+                  role="combobox"
+                  aria-expanded="false"
+                  aria-controls="map-list"
+                  aria-autocomplete="list"
+                />
+                <ul id="map-list" class="map-list" role="listbox" hidden></ul>
+              </div>
+              <p id="map-hint" class="hint">Pick a map from the list to start.</p>
+            </div>
+
+            <div class="field">
+              <label for="starting-gold">Starting gold</label>
+              <input
+                id="starting-gold"
+                type="text"
+                inputmode="numeric"
+                placeholder="1.000.000"
+              />
+            </div>
+
+            <button id="start-btn" type="submit" disabled>Start grind</button>
+          </form>
+        </section>
+
+        <section id="running-view" class="panel" hidden>
+          <div class="session-meta">
+            <p class="map-chip" id="active-map"></p>
+            <p class="muted">Starting gold <strong id="active-start-gold"></strong></p>
+          </div>
+          <p id="timer" class="timer">00:00:00</p>
+          <p id="timer-status" class="status-pill">Running</p>
+          <div class="actions">
+            <button id="pause-btn" type="button">Pause</button>
+            <button id="finish-btn" type="button" class="danger">Finish</button>
+          </div>
+
+          <div id="finish-form" class="finish-box" hidden>
+            <label for="ending-gold">Ending gold</label>
+            <input id="ending-gold" type="text" inputmode="numeric" placeholder="1.250.000" />
+            <p id="finish-error" class="error" hidden>Enter a valid gold amount.</p>
+            <div class="actions">
+              <button id="confirm-finish-btn" type="button">Save result</button>
+              <button id="cancel-finish-btn" type="button" class="ghost">Cancel</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="result-view" class="panel result-panel" hidden>
+          <p class="eyebrow">Session complete</p>
+          <h2 id="result-map"></h2>
+          <p class="muted" id="result-duration"></p>
+          <div class="result-grid">
+            <article>
+              <p class="label">Gold earned</p>
+              <p id="result-gained" class="stat"></p>
+            </article>
+            <article>
+              <p class="label">Gold / hour</p>
+              <p id="result-rate" class="stat"></p>
+            </article>
+          </div>
+          <button id="new-session-btn" type="button">New session</button>
+        </section>
+
+        <section class="panel history-panel">
+          <h2>Session history</h2>
+          <div id="history-list" class="history-list">
+            <p class="muted empty">No finished sessions yet.</p>
+          </div>
+        </section>
+      </main>
+
+      <p class="watermark">created by MYUJIN <span class="version">v1.0</span></p>
+    </div>
+
+    <script src="maps.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
