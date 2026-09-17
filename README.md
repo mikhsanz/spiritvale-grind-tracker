@@ -4,7 +4,7 @@ A local web app for tracking Spiritvale grind sessions. Record the map, starting
 
 No install, no login, no server. Open `index.html` in a browser.
 
-**Version:** v1.0  
+**Version:** v1.1  
 **Created by:** MYUJIN
 
 ## How to use
@@ -16,6 +16,7 @@ No install, no login, no server. Open `index.html` in a browser.
 5. Use **Pause** / **Resume** if you step away. Paused time does not count.
 6. Click **Finish**, enter **ending gold**, then **Save result**.
 7. The app shows gold earned, duration, and gold per hour. Finished sessions stay in **Session history**.
+8. **Daily earnings** totals gold from finished sessions for today, plus previous days.
 
 You do not need Node, npm, or a terminal.
 
@@ -25,6 +26,7 @@ You do not need Node, npm, or a terminal.
 - Live timer with pause and resume
 - Automatic gold thousand separators
 - Gold earned and gold per hour
+- Daily earnings (today plus previous days)
 - Session history in this browser (`localStorage`)
 - Running or paused sessions survive a refresh or tab close
 

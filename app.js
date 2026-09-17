@@ -28,6 +28,9 @@
   const resultRate = document.getElementById("result-rate");
   const newSessionBtn = document.getElementById("new-session-btn");
   const historyList = document.getElementById("history-list");
+  const todayGoldEl = document.getElementById("today-gold");
+  const todayMetaEl = document.getElementById("today-meta");
+  const dailyList = document.getElementById("daily-list");
 
   let sessions = loadSessions();
   let selectedMap = null;
@@ -130,6 +133,49 @@
   function goldPerHour(gained, elapsedMs) {
     if (!elapsedMs) return 0;
     return gained / (elapsedMs / 3600000);
+  }
+
+  function dayKey(value) {
+    const date = new Date(value);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return year + "-" + month + "-" + day;
+  }
+
+  function formatDayLabel(key) {
+    const parts = key.split("-");
+    const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    return date.toLocaleDateString(undefined, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  function dailySummaries() {
+    const groups = {};
+    finishedSessions().forEach(function (session) {
+      const key = dayKey(session.startedAt);
+      if (!groups[key]) {
+        groups[key] = { key: key, gold: 0, sessions: 0, elapsedMs: 0 };
+      }
+      groups[key].gold += session.goldGained || 0;
+      groups[key].sessions += 1;
+      groups[key].elapsedMs += session.elapsedMs || 0;
+    });
+    return Object.keys(groups)
+      .sort()
+      .reverse()
+      .map(function (key) {
+        return groups[key];
+      });
+  }
+
+  function sessionMetaLabel(count, elapsedMs) {
+    const sessionLabel = count === 1 ? "1 session" : count + " sessions";
+    return sessionLabel + " · " + formatDuration(elapsedMs);
   }
 
   function filterMaps(query) {
@@ -255,7 +301,55 @@
     stopTick();
   }
 
+  function renderDaily() {
+    const todayKey = dayKey(new Date());
+    const days = dailySummaries();
+    const today = days.find(function (day) {
+      return day.key === todayKey;
+    });
+
+    const todayGold = today ? today.gold : 0;
+    todayGoldEl.textContent = (todayGold > 0 ? "+" : "") + formatGold(todayGold);
+    todayGoldEl.classList.toggle("negative", todayGold < 0);
+    todayMetaEl.textContent = today
+      ? sessionMetaLabel(today.sessions, today.elapsedMs)
+      : "No sessions yet";
+
+    const previous = days.filter(function (day) {
+      return day.key !== todayKey;
+    });
+    if (!previous.length) {
+      dailyList.innerHTML = days.length
+        ? ""
+        : '<p class="muted empty">No daily totals yet.</p>';
+      return;
+    }
+
+    dailyList.innerHTML = previous
+      .map(function (day) {
+        const sign = day.gold > 0 ? "+" : "";
+        return (
+          '<article class="daily-item">' +
+          "<span><strong>" +
+          escapeHtml(formatDayLabel(day.key)) +
+          '</strong><span class="sub">' +
+          sessionMetaLabel(day.sessions, day.elapsedMs) +
+          "</span></span>" +
+          "<span>" +
+          sign +
+          formatGold(day.gold) +
+          '<span class="sub">Gold earned</span></span>' +
+          "<span>" +
+          formatGold(Math.round(goldPerHour(day.gold, day.elapsedMs))) +
+          '<span class="sub">Gold / hour</span></span>' +
+          "</article>"
+        );
+      })
+      .join("");
+  }
+
   function renderHistory() {
+    renderDaily();
     const items = finishedSessions();
     if (!items.length) {
       historyList.innerHTML = '<p class="muted empty">No finished sessions yet.</p>';

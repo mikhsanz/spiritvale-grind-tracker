@@ -269,6 +269,37 @@ button.danger {
   color: var(--danger);
 }
 
+.daily-today {
+  background: var(--bg-input);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.daily-today .stat {
+  margin: 4px 0 6px;
+}
+
+.daily-list {
+  display: grid;
+  gap: 10px;
+}
+
+.daily-item {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg-input);
+}
+
+.daily-item span {
+  font-size: 14px;
+}
+
 .history-list {
   display: grid;
   gap: 10px;
@@ -288,6 +319,7 @@ button.danger {
   font-size: 14px;
 }
 
+.daily-item .sub,
 .history-item .sub {
   display: block;
   color: var(--muted);
@@ -318,6 +350,7 @@ button.danger {
 
 @media (max-width: 640px) {
   .history-item,
+  .daily-item,
   .result-grid,
   .session-meta {
     grid-template-columns: 1fr;
